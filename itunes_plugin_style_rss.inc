@@ -68,7 +68,7 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
     );
     $form['explicit'] = array(
       '#type' => 'select', '#title' => t('Explicit'),
-      '#options' => array(0 => 'Unspecified', AUDIO_ITUNES_EXPLICIT_YES => 'Yes', AUDIO_ITUNES_EXPLICIT_CLEAN => 'Clean'),
+      '#options' => array(0 => 'Unspecified', ITUNES_EXPLICIT_YES => 'Yes', ITUNES_EXPLICIT_CLEAN => 'Clean'),
       '#default_value' => $this->options['explicit'],
       '#description' => t('If select "yes", an "explicit" parental advisory graphic will appear next to your podcast artwork on the iTunes Music Store, and in the Name column in iTunes. If you select "clean", the parental advisory type is considered Clean, meaning that no explicit language or adult content is included anywhere in the episode, and a "clean" graphic will appear.'),
     );
