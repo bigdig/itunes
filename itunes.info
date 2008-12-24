@@ -1,0 +1,6 @@
+; $Id$
+name = iTunes
+description = An iTunes specific RSS plugin for views feeds.
+core = 6.x
+dependencies[] = views
+dependencies[] = views_ui
