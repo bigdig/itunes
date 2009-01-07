@@ -5,7 +5,14 @@
  * Implementation of hook_install().
  */
 function itunes_install() {
-  drupal_install_schema('itunes');
+  // Migrate old audio_itunes data.
+  if (db_table_exists('audio_itunes_item')) {
+    $ret = array();
+    db_rename_table($ret, 'audio_itunes_item', 'itunes_item');
+  }
+  else {
+    drupal_install_schema('itunes');
+  }
 }
 
 /**
@@ -62,3 +69,4 @@ function itunes_schema() {
   );
   return $schema;
 }
+
