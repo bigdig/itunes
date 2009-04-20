@@ -139,7 +139,6 @@ function itunes_nodeapi(&$node, $op, $arg) {
         $fields = variable_get('itunes_fields', array());
         if (!empty($fields[$node->type]) && !empty($node->{$fields[$node->type]}[0]['fid'])) {
           $file = (array) $node->{$fields[$node->type]}[0];
-          dsm($file);
           $ret[] = array(
             'key' => 'enclosure',
             'value' => '',

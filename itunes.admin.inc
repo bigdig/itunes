@@ -70,7 +70,7 @@ function theme_itunes_admin_settings($form) {
   }
 
   if ($has_filefields) {
-    $header[] = t('Fields to list in RSS feeds');
+    $header[] = t('FileField to list in RSS feeds');
   }
 
   return theme('table', $header, $rows) . drupal_render($form);
