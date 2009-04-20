@@ -82,7 +82,8 @@ function itunes_form_alter(&$form, &$form_state, $form_id) {
  * Implementation of hook_nodeapi().
  */
 function itunes_nodeapi(&$node, $op, $arg) {
-  if ($node->type == 'audio') {
+  $types = variable_get('itunes_types', array('audio'));
+  if (in_array($node->type, $types)) {
     switch ($op) {
       case 'load':
         $result = db_query("SELECT * FROM {itunes_item} WHERE vid = %d", $node->vid);
