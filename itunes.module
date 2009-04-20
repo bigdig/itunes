@@ -22,12 +22,34 @@ function itunes_menu() {
 }
 
 /**
+ * Implementation of hook_theme
+ */
+function itunes_theme() {
+  return array(
+    'itunes_admin_settings' => array(
+      'arguments' => array('form'),
+      'file' => 'itunes.admin.inc',
+    ),
+  );
+}
+
+/**
  * Implementation of hook_views_api().
  */
 function itunes_views_api() {
   return array(
     'api' => 2,
   );
+}
+
+/**
+ * Implementation of hook_help().
+ */
+function itunes_help($section, $arg) {
+  switch ($section) {
+    case 'admin/settings/itunes':
+      return t("This form allows you to determine which content types need to be have the iTunes feed item data fields added to them. If the <a href='!filefield-url'>FileField</a> module is installed then you can choose which field to include as an enclosure in RSS feeds.", array('!filefield-url' => url('http://drupal.org/project/filefield')));
+  }
 }
 
 /**
@@ -113,33 +135,46 @@ function itunes_nodeapi(&$node, $op, $arg) {
         break;
 
       case 'rss item':
-        if (empty($node->itunes)) {
-          return;
-        }
-
-        $ret[] = array(
-          'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
-          'key' => 'itunes:summary',
-          'value' => $node->itunes['summary'],
-        );
-        $ret[] = array(
-          'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
-          'key' => 'itunes:subtitle',
-          'value' => $node->itunes['subtitle'],
-        );
-        if ($node->itunes['block']) {
+        $ret = array();
+        $fields = variable_get('itunes_fields', array());
+        if (!empty($fields[$node->type]) && !empty($node->{$fields[$node->type]}[0]['fid'])) {
+          $file = (array) $node->{$fields[$node->type]}[0];
+          dsm($file);
           $ret[] = array(
-            'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
-            'key' => 'itunes:block',
-            'value' => 'yes',
+            'key' => 'enclosure',
+            'value' => '',
+            'attributes' => array(
+              'url' => file_create_url($file['filepath']),
+              'length' => $file['filesize'],
+              'type' => $file['filemime'],
+            )
           );
         }
-        $ret[] = array(
-          'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
-          'key' => 'itunes:explicit',
-          'value' => itunes_explicit($node->itunes['explicit']),
-        );
-        // TODO: first 12 freetaging terms should go into the keywords...
+        if (!empty($node->itunes)) {
+          $ret[] = array(
+            'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
+            'key' => 'itunes:summary',
+            'value' => $node->itunes['summary'],
+          );
+          $ret[] = array(
+            'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
+            'key' => 'itunes:subtitle',
+            'value' => $node->itunes['subtitle'],
+          );
+          if ($node->itunes['block']) {
+            $ret[] = array(
+              'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
+              'key' => 'itunes:block',
+              'value' => 'yes',
+            );
+          }
+          $ret[] = array(
+            'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
+            'key' => 'itunes:explicit',
+            'value' => itunes_explicit($node->itunes['explicit']),
+          );
+          // TODO: first 12 freetaging terms should go into the keywords...
+        }
         return $ret;
     }
   }

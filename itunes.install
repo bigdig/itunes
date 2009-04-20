@@ -20,6 +20,8 @@ function itunes_install() {
  */
 function itunes_uninstall() {
   drupal_uninstall_schema('itunes');
+  variable_del('itunes_types');
+  variable_del('itunes_filefields');
 }
 
 /**
