@@ -11,7 +11,7 @@ define('ITUNES_EXPLICIT_CLEAN', 2);
 function itunes_menu() {
   $items = array();
   $items['admin/settings/itunes'] = array(
-    'title' => 'Audio iTunes',
+    'title' => 'iTunes',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('itunes_admin_settings'),
     'access arguments' => array('administer site configuration'),
