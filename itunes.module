@@ -136,7 +136,7 @@ function itunes_nodeapi(&$node, $op, $arg) {
 
       case 'rss item':
         $ret = array();
-        $fields = variable_get('itunes_fields', array());
+        $fields = variable_get('itunes_filefields', array());
         if (!empty($fields[$node->type]) && !empty($node->{$fields[$node->type]}[0]['fid'])) {
           $file = (array) $node->{$fields[$node->type]}[0];
           $ret[] = array(
