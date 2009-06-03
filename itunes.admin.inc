@@ -43,6 +43,27 @@ function itunes_admin_settings() {
     }
   }
 
+  if (module_exists('taxonomy')) {
+    $vocabs = variable_get('itunes_vocabularies', array());
+    $form['itunes_vocabularies'] = array(
+      '#tree' => TRUE,
+    );
+    // Build the node's filefield selector.
+    foreach ($node_types as $type) {
+      $type_vocabs = taxonomy_get_vocabularies($type->type);
+      $options = array(NULL => t('- None -'));
+      foreach ($type_vocabs as $vid => $vocab) {
+        $options[$vid] = $vocab->name;
+      }
+      $form['itunes_vocabularies'][$type->type] = array(
+        '#type' => 'select',
+        '#options' => $options,
+        '#default_value' => empty($type_vocabs[$type->type]) ? NULL : $type_vocabs[$type->type],
+        '#access' => count($options) > 1,
+      );
+    }
+  }
+
   $form = system_settings_form($form);
   $form['#validate'][] = 'itunes_admin_settings_validate';
   $form['#theme'] = 'itunes_admin_settings';
@@ -60,17 +81,26 @@ function theme_itunes_admin_settings($form) {
   unset($form['itunes_types']['#title']);
 
   $has_filefields = FALSE;
+  $has_vocabularies = FALSE;
   foreach (element_children($form['itunes_types']) as $key) {
     $row = array(drupal_render($form['itunes_types'][$key]));
     if (isset($form['itunes_filefields'][$key])) {
       $row[] = drupal_render($form['itunes_filefields'][$key]);
       $has_filefields = TRUE;
     }
+    if (isset($form['itunes_vocabularies'][$key])) {
+      $row[] = drupal_render($form['itunes_vocabularies'][$key]);
+      $has_vocabularies = TRUE;
+    }
+
     $rows[] = $row;
   }
 
   if ($has_filefields) {
     $header[] = t('FileField to list in RSS feeds');
+  }
+  if ($has_vocabularies) {
+    $header[] = t('Vocabulary for use as keywords');
   }
 
   return theme('table', $header, $rows) . drupal_render($form);

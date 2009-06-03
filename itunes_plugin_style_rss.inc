@@ -25,6 +25,7 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
     $options['owner_name'] = array('default' => '', 'translatable' => FALSE);
     $options['owner_email'] = array('default' => '', 'translatable' => FALSE);
     $options['categories'] = array('default' => array('', '', ''), 'translatable' => FALSE);
+    $options['keywords'] = array('default' => '', 'translatable' => TRUE);
 
     return $options;
   }
@@ -126,6 +127,13 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
       '#default_value' => $this->options['categories'][2],
       '#options' => $category_options,
     );
+    $form['keywords'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Keywords'),
+      '#default_value' => $this->options['keywords'],
+      '#maxlength' => 4000,
+      '#description' => t('This tag allows users to search on a maximum of 12 text keywords. Use commas to separate keywords.'),
+    );
   }
 
   function options_validate(&$form, &$form_state) {
@@ -141,8 +149,15 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
         }
       }
     }
-    if (!empty($form_state['values']['style_options']['owner_email']) && !valid_email_address($form_state['values']['style_options']['owner_email'])) {
-      form_set_error('owner_email', t('The owner email must be a valid email address.'));
+    if (!empty($form_state['values']['style_options']['owner_email'])) {
+      if (!valid_email_address($form_state['values']['style_options']['owner_email'])) {
+        form_set_error('owner_email', t('The owner email must be a valid email address.'));
+      }
+    }
+    if (!empty($form_state['values']['style_options']['keywords'])) {
+      if (substr_count($form_state['values']['style_options']['keywords'], ',') > 11) {
+        form_set_error('keywords', t('Only 12 keywords are allowed.'));
+      }
     }
   }
 
@@ -222,6 +237,12 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
         }
         $extra[] = $element;
       }
+    }
+    if ($this->options['keywords']) {
+      $extra[] = array(
+        'key' => 'itunes:keywords',
+        'value' => $this->options['keywords'],
+      );
     }
 
     return $extra;

@@ -148,7 +148,38 @@ function itunes_nodeapi(&$node, $op, $arg) {
               'type' => $file['filemime'],
             )
           );
+          if (!empty($file['data']['duration'])) {
+            $ret[] = array(
+              'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
+              'key' => 'itunes:duration',
+              'value' => (int) $file['data']['duration'],
+            );
+          }
         }
+
+        $vocabs = variable_get('itunes_vocabularies', array());
+        if (!empty($vocabs[$node->type])) {
+          $keywords = array();
+          foreach ($node->taxonomy as $tid => $term) {
+            if ($term->vid == $vocabs[$node->type]) {
+              $keywords[] = $term->name;
+            }
+          }
+          if (!empty($keywords)) {
+            $ret[] = array(
+              'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
+              'key' => 'itunes:keywords',
+              'value' => implode(',', array_slice($keywords, 0, 12)),
+            );
+          }
+        }
+
+        $ret[] = array(
+          'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
+          'key' => 'itunes:author',
+          'value' => $node->name,
+        );
+
         if (!empty($node->itunes)) {
           $ret[] = array(
             'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
@@ -172,7 +203,6 @@ function itunes_nodeapi(&$node, $op, $arg) {
             'key' => 'itunes:explicit',
             'value' => itunes_explicit($node->itunes['explicit']),
           );
-          // TODO: first 12 freetaging terms should go into the keywords...
         }
         return $ret;
     }
