@@ -64,7 +64,8 @@ function itunes_form_alter(&$form, &$form_state, $form_id) {
     if (isset($form['#node']->type) && in_array($form['#node']->type, $types)) {
       $node = $form['#node'];
       $form['itunes'] = array(
-        '#type' => 'fieldset', '#title' => t('iTunes feed information'),
+        '#type' => 'fieldset',
+        '#title' => t('iTunes feed information'),
         '#collapsible' => TRUE,
         '#description' => t('iTunes specific information.'),
         '#weight' => 0,
@@ -98,6 +99,21 @@ function itunes_form_alter(&$form, &$form_state, $form_id) {
       );
     }
   }
+}
+
+/**
+ * Implements hook_content_extra_fields()
+ *
+ * CCK hook to allow moving the iTunes field set around in the node edit form.
+ */
+function itunes_content_extra_fields($type_name) {
+  return array(
+    'itunes' => array(
+      'label' => t('iTunes feed information'),
+      'description' => t('iTunes specific information.'),
+      'weight' => 0,
+    ),
+  );
 }
 
 /**
