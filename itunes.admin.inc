@@ -58,7 +58,7 @@ function itunes_admin_settings() {
       $form['itunes_vocabularies'][$type->type] = array(
         '#type' => 'select',
         '#options' => $options,
-        '#default_value' => empty($type_vocabs[$type->type]) ? NULL : $type_vocabs[$type->type],
+        '#default_value' => empty($vocabs[$type->type]) ? NULL : $vocabs[$type->type],
         '#access' => count($options) > 1,
       );
     }
