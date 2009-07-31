@@ -52,7 +52,8 @@ function itunes_views_api() {
 function itunes_help($section, $arg) {
   switch ($section) {
     case 'admin/settings/itunes':
-      return t("This form allows you to determine which content types need to be have the iTunes feed item data fields added to them. If the <a href='!filefield-url'>FileField</a> module is installed then you can choose which field to include as an enclosure in RSS feeds.", array('!filefield-url' => url('http://drupal.org/project/filefield')));
+      return '<p>'. t("This form allows you to determine which content types need to be have the iTunes feed item data fields added to them.") .'<br />'
+        . t("If the <a href='!filefield-url'>FileField</a> module is installed then you can choose which field to include as an enclosure in RSS feeds.", array('!filefield-url' => url('http://drupal.org/project/filefield'))) .'</p>';
   }
 }
 
@@ -156,7 +157,9 @@ function itunes_nodeapi(&$node, $op, $arg) {
 
       case 'rss item':
         $ret = array();
-        $fields = variable_get('itunes_filefields', array());
+
+        // File enclosure.
+        $fields = variable_get('itunes_enclosure_source', array());
         if (!empty($fields[$node->type]) && !empty($node->{$fields[$node->type]}[0]['fid'])) {
           $file = (array) $node->{$fields[$node->type]}[0];
           $ret[] = array(
@@ -177,7 +180,8 @@ function itunes_nodeapi(&$node, $op, $arg) {
           }
         }
 
-        $vocabs = variable_get('itunes_vocabularies', array());
+        // Keyword tags.
+        $vocabs = variable_get('itunes_keyword_source', array());
         if (!empty($vocabs[$node->type])) {
           $keywords = array();
           foreach ($node->taxonomy as $tid => $term) {
@@ -194,12 +198,34 @@ function itunes_nodeapi(&$node, $op, $arg) {
           }
         }
 
-        $ret[] = array(
-          'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
-          'key' => 'itunes:author',
-          'value' => $node->name,
-        );
+        // Author.
+        $author_source = variable_get('itunes_author_source', array());
+        if (!empty($author_source[$node->type])) {
+          if ($author_source[$node->type] == 'node_author') {
+            $author = strip_tags(theme('username', $node));
+          }
+          else {
+            $author_field = $node->$author_source[$node->type];
+            if (!empty($author_field[0]['safe'])) {
+              $author = $author_field[0]['view'];
+            }
+            elseif (!empty($author_field[0]['view'])) {
+              foreach ($author_field as $authors) {
+                $authors_view[] = strip_tags(($authors['view']));
+              }
+              $author = implode($authors_view, ', ');
+            }
+          }
+          if ($author) {
+            $ret[] = array(
+              'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),
+              'key' => 'itunes:author',
+              'value' => $author,
+            );
+          }
+        }
 
+        // Remaining elements.
         if (!empty($node->itunes)) {
           $ret[] = array(
             'namespace' => array('xmlns:itunes' => 'http://www.itunes.com/dtds/podcast-1.0.dtd'),

@@ -26,8 +26,9 @@ function itunes_install() {
 function itunes_uninstall() {
   drupal_uninstall_schema('itunes');
   variable_del('itunes_types');
-  variable_del('itunes_filefields');
-  variable_del('itunes_vocabularies');
+  variable_del('itunes_enclosure_source');
+  variable_del('itunes_keyword_source');
+  variable_del('itunes_author_source');
 }
 
 /**
@@ -78,3 +79,21 @@ function itunes_schema() {
   return $schema;
 }
 
+/**
+ * Rename the source variables.
+ */
+function itunes_update_6100() {
+  $ret = array();
+
+  if ($value = variable_get('itunes_filefields', array())) {
+    variable_set('itunes_enclosure_source', $value);
+    variable_del('itunes_filefields');
+  }
+
+  if ($value = variable_get('itunes_vocabularies', array())) {
+    variable_set('itunes_keyword_source', $value);
+    variable_del('itunes_vocabularies');
+  }
+
+  return $ret;
+}
