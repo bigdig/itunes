@@ -1,4 +1,10 @@
 <?php
+// $Id$
+
+/**
+ * @file
+ * Views includes.
+ */
 
 /**
  * Implementation of hook_views_plugins().

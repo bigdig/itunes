@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Admin settings for iTunes.
+ */
+
+/**
  * Settings form.
  */
 function itunes_admin_settings() {

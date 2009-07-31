@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Installation, updates, and desinstallation of the iTunes module.
+ */
+
+/**
  * Implementation of hook_install().
  */
 function itunes_install() {

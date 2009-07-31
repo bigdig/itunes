@@ -4,6 +4,10 @@
 define('ITUNES_EXPLICIT_YES', 1);
 define('ITUNES_EXPLICIT_CLEAN', 2);
 
+/**
+ * @file
+ * Provides an iTunes view style for feeds.
+ */
 
 /**
  * Implementation of hook_menu().
@@ -22,7 +26,7 @@ function itunes_menu() {
 }
 
 /**
- * Implementation of hook_theme
+ * Implementation of hook_theme().
  */
 function itunes_theme() {
   return array(

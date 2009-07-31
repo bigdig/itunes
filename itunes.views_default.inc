@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Default iTunes view.
+ */
+
+/**
  * Implementation of hook_views_default_views().
  */
 function itunes_views_default_views() {
@@ -79,7 +84,7 @@ function itunes_views_default_views() {
     'title' => '',
     'weight' => 0,
   ));
-   $views[$view->name] = $view;
+  $views[$view->name] = $view;
 
   return $views;
 }
