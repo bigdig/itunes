@@ -143,7 +143,7 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
       }
       else {
         $url = parse_url($form_state['values']['style_options']['image_url']);
-        $ext = strtolower(pathinfo($url['path'], PATHINFO_EXTENSION));
+        $ext = drupal_strtolower(pathinfo($url['path'], PATHINFO_EXTENSION));
         if (!isset($url['path']) || ($ext != 'jpg' && $ext != 'png')) {
           form_set_error('image_url', t('The URL must specify a file ending with <code>.jpg</code> or <code>.png</code>.'));
         }
