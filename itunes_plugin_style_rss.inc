@@ -171,6 +171,12 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
       'key' => 'itunes:explicit',
       'value' => itunes_explicit($this->options['explicit']),
     );
+    if ($this->options['copyright']) {
+      $extra[] = array(
+        'key' => 'copyright',
+        'value' => $this->options['copyright'],
+      );
+    }
     if ($this->options['author']) {
       $extra[] = array(
         'key' => 'itunes:author',
