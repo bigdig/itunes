@@ -17,6 +17,7 @@ function itunes_views_plugins() {
         'title' => t('iTunes RSS Feed'),
         'help' => t('Generates an RSS feed from a view with extra iTunes specific attributes.'),
         'handler' => 'itunes_plugin_style_rss',
+        'path' => drupal_get_path('module', 'itunes') . '/views',
         'theme' => 'views_view_rss',
         'parent' => 'rss',
         'uses row plugin' => TRUE,

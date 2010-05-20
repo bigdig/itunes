@@ -43,6 +43,7 @@ function itunes_theme() {
 function itunes_views_api() {
   return array(
     'api' => 2,
+    'path' => drupal_get_path('module', 'itunes') . '/views',
   );
 }
 
