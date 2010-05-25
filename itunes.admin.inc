@@ -37,7 +37,7 @@ function itunes_admin_settings() {
       $content = $content_types[$type->type];
       $options = array(NULL => t('- None -'));
       foreach ($content['fields'] as $field_name => $field) {
-        if ($field['type'] == 'filefield') {
+        if ($field['type'] == 'filefield' || $field['type'] == 'emaudio') {
           $options[$field_name] = $field['widget']['label'];
         }
       }
