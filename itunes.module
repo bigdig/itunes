@@ -73,7 +73,7 @@ function itunes_form_alter(&$form, &$form_state, $form_id) {
         '#type' => 'fieldset',
         '#title' => t('iTunes feed information'),
         '#collapsible' => TRUE,
-        '#description' => t('iTunes specific information.'),
+        '#group' => 'additional_settings',
         '#weight' => 0,
         '#tree' => TRUE,
       );
