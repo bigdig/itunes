@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 define('ITUNES_EXPLICIT_YES', 1);
 define('ITUNES_EXPLICIT_CLEAN', 2);
