@@ -80,6 +80,7 @@ function itunes_views_default_views() {
     'summary' => '',
     'author' => '',
     'copyright' => '',
+    'link_url' => '',
     'image_url' => '',
     'new_feed_url' => '',
     'explicit' => '0',

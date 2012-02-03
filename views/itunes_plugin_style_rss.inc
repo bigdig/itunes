@@ -18,6 +18,7 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
     $options['summary'] = array('default' => '', 'translatable' => TRUE);
     $options['author'] = array('default' => '', 'translatable' => TRUE);
     $options['copyright'] = array('default' => '', 'translatable' => TRUE);
+    $options['link_url'] = array('default' => '', 'translatable' => FALSE);
     $options['image_url'] = array('default' => '', 'translatable' => FALSE);
     $options['explicit'] = array('default' => 0, 'translatable' => FALSE);
     $options['block'] = array('default' => 0, 'translatable' => FALSE);
@@ -59,6 +60,13 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
       '#default_value' => $this->options['copyright'],
       '#maxlength' => 255,
       '#description' => t('i.e. "&#xA9; 2005 John Doe"'),
+    );
+    $form['link_url'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Link URL'),
+      '#default_value' => $this->options['link_url'],
+      '#maxlength' => 255,
+      '#description' => t('This specifies the url that will be shown for the link field in iTunes. If left empty then the page url of this view will be used.'),
     );
     $form['image_url'] = array(
       '#type' => 'textfield',
@@ -182,6 +190,13 @@ class itunes_plugin_style_rss extends views_plugin_style_rss {
           'type' => 'application/rss+xml',
         ),
       );
+    }
+
+    // If the link url is set we need to override the handlers path to make sure that the path reaches the theme function.
+    if ($this->options['link_url']) {
+      $this->display->handler->options['path'] = $this->options['link_url'];
+      $this->view->display_handler->options['defaults']['link_display'] = 0;
+      $this->view->display_handler->options['link_display'] = $this->view->current_display;
     }
 
     // Specify the namespace in this element because it is always included so
